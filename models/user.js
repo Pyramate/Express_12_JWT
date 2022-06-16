@@ -33,18 +33,15 @@ const findOne = (id) => {
       'SELECT id, email, firstname, lastname, city, language FROM users WHERE id = ?',
       [id]
     )
-    .then(([results]) => results[0]);
+    .then(([results]) => {
+      console.log(results[0]);
+      return results[0];
+    });
 };
 
 const findByEmail = (email) => {
   return db
     .query('SELECT * FROM users WHERE email = ?', [email])
-    .then(([results]) => results[0]);
-};
-
-const findByToken = (token) => {
-  return db
-    .query('SELECT * FROM users WHERE token = ?', [token])
     .then(([results]) => results[0]);
 };
 
@@ -78,8 +75,11 @@ const create = ({ firstname, lastname, city, language, email, password }) => {
   });
 };
 
-const update = (id, newAttributes) => {
-  return db.query('UPDATE users SET ? WHERE id = ?', [newAttributes, id]);
+const update = (id, { firstname, lastname, city, language, email }) => {
+  return db.query('UPDATE users SET ? WHERE id = ?', [
+    { firstname, lastname, city, language, email },
+    id,
+  ]);
 };
 
 const destroy = (id) => {
@@ -111,7 +111,6 @@ module.exports = {
   update,
   destroy,
   findByEmail,
-  findByToken,
   movies,
   findByEmailWithDifferentId,
   hashPassword,

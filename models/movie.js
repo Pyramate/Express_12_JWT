@@ -14,18 +14,16 @@ const validate = (data, forCreation = true) => {
   }).validate(data, { abortEarly: false }).error;
 };
 
-const findMany = ({ filters: { color, max_duration } }) => {
-  let sql = 'SELECT * FROM movies';
-  const sqlValues = [];
+const findMany = ({ filters: { color, max_duration } }, userId) => {
+  let sql = 'SELECT * FROM movies where user_id=?';
+  const sqlValues = [userId];
 
   if (color) {
-    sql += ' WHERE color = ?';
+    sql += ' AND WHERE color = ?';
     sqlValues.push(color);
   }
   if (max_duration) {
-    if (color) sql += ' AND duration <= ? ;';
-    else sql += ' WHERE duration <= ?';
-
+    sql += ' AND WHERE duration <= ?';
     sqlValues.push(max_duration);
   }
 
